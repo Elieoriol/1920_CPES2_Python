@@ -65,22 +65,28 @@ print("Bulles opti :", T)
 
 # 6.1
 import numpy as np
+import random as rd
 
 def listeAlea(n):
     l=[]
     for i in range(n):
-        l.append(rd.randint(-1000, 1000))
+        l.append(rd.uniform(-1000, 1000))
     return l
+
     # une possibilite plus rapide avec numpy :
-    # return np.random.randint(-1000, 1000, size=n)
+    # return np.random.uniformx(-1000, 1000, size=n)
 
 
 # 6.2
+from mesFonctionsTri import *
+import time
+
 fich = open("tri_results.txt", 'w')
 fich.write("Taille\tTB\tTS\tTI\tTR\tTF\tPS\n")
 
 result = np.zeros((6,10))
 cpt = 0
+reps = 10
 for n in range(1000, 10001, 1000):
     print(n, end=" ")
     fich.write(str(n))
@@ -88,7 +94,7 @@ for n in range(1000, 10001, 1000):
 
     # on repete 10 fois, on ajoute les temps de chaque algo de tri
     # on passe a chaque fois en argument l[:] pour copier l, car sinon on va trier la liste une premiere fois avec triSelection() puis appeler les autres fonctions sur cette liste triee
-    for i in range(10):
+    for i in range(reps):
         l = listeAlea(n)
 
         t0 = time.time()
@@ -117,27 +123,8 @@ for n in range(1000, 10001, 1000):
 
     # on moyenne les temps sur les 10 repetitions et on ecrit les resultats dans le fichier
     for k in range(6):
-        result[k,cpt] = tps[k]/10
+        result[k,cpt] = tps[k]/reps
         fich.write("\t"+str(round(result[k,cpt], 4)))
     fich.write("\n")
     cpt += 1
 fich.close()
-
-
-# 6.3
-import matplotlib.pyplot as plt
-
-x = range(1000, 10001, 1000)
-plt.plot(x, result[0], label="Tri bulles")
-plt.plot(x, result[1], label="Tri selection")
-plt.plot(x, result[2], label="Tri insertion")
-plt.plot(x, result[3], label="Tri rapide")
-plt.plot(x, result[4], label="Tri fusion")
-plt.plot(x, result[5], label="Python sort")
-plt.yscale('log')
-plt.legend()
-plt.title("Temps moyen d'éxécution des algorithmes de tri")
-plt.xlabel("Taille")
-plt.ylabel("Temps")
-plt.savefig('tps.jpg')
-plt.show()
