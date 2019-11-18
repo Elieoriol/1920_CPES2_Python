@@ -74,7 +74,7 @@ def listeAlea(n):
     return l
 
     # une possibilite plus rapide avec numpy :
-    # return np.random.uniformx(-1000, 1000, size=n)
+    # return np.random.uniform(-1000, 1000, size=n)
 
 
 # 6.2
@@ -128,3 +128,25 @@ for n in range(1000, 10001, 1000):
     fich.write("\n")
     cpt += 1
 fich.close()
+
+
+# 6.3
+import matplotlib.pyplot as plt
+
+plt.figure('10')
+x = range(1000, 10001, 1000)
+plt.plot(x, result[0], label="Tri bulles")
+plt.plot(x, result[1], label="Tri selection")
+plt.plot(x, result[2], label="Tri insertion")
+plt.plot(x, result[3], label="Tri rapide")
+plt.plot(x, result[4], label="Tri fusion")
+plt.plot(x, result[5], label="Python sort")
+plt.yscale(’log’)
+plt.legend()
+plt.title("Temps moyen d’execution des algorithmes de tri")
+plt.xlabel("Taille")
+plt.ylabel("Temps")
+plt.savefig(’tps.jpg’)
+plt.show()
+
+
