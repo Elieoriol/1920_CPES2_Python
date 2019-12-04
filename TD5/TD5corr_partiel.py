@@ -107,6 +107,32 @@ marque = []
 affichage(arbre, marque, 'infixe')
 print("Infixe :", marque)
 
+## Exercice 2 : ABR
+
+# 2.1
+def initialisationArbre(e):
+    abr = Arbre(e)
+
+    print('Fils Gauche de ', e)
+    x = input()
+    if x != '':
+        noeud = initialisationArbre(int(x))
+        abr.filsGauche = noeud
+        noeud.pere = abr
+
+    print('Fils Droit de ', e)
+    y = input()
+    if y != '':
+        noeud = initialisationArbre(int(y))
+        abr.filsDroit = noeud
+        noeud.pere = abr
+    return abr
+
+abr = initialisationArbre(25)
+marque = []
+infixe(abr, marque)
+print('Infixe de abr :', marque)
+
 marque = []
 affichage(arbre, marque, 'postfixe')
 print("Postfixe :", marque)
