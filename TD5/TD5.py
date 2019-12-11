@@ -298,3 +298,123 @@ _, abr = supprimemax(abr)
 marque = []
 infixe(abr, marque)
 print('Infixe de abr après suppression du max :', marque)
+
+
+## Exercice 4 : Le tri par tas
+
+class Heap:
+    def __init__(self):
+        self.L = []
+        self.n = 0
+
+    def push(self, x):
+        self.L.append(x)
+        self.n += 1
+        pos = self.n-1
+        parent_pos = (pos+1)//2-1
+        while pos > 0 and self.L[parent_pos] > self.L[pos]:
+            self.L[parent_pos], self.L[pos] = self.L[pos], self.L[parent_pos]
+            pos = parent_pos
+            parent_pos = (pos+1)//2-1
+
+    def fromList(self, l):
+        self.L = []
+        self.n = 0
+        for x in l:
+            self.push(x)
+
+
+
+
+
+
+
+
+    def pop(self):
+        to_return = self.L[0]
+        self.n -= 1
+        if self.n == 0:
+            self.L = []
+            return to_return
+
+        self.L[0] = self.L.pop()
+        pos = 0
+        child_pos = 2*pos+1
+        while child_pos < self.n:
+            right_pos = child_pos+1
+            if right_pos < self.n and self.L[right_pos] < self.L[child_pos] and self.L[right_pos] < self.L[pos]:
+                child_pos = right_pos
+
+            if self.L[pos] < self.L[child_pos]:
+                break
+
+            self.L[pos], self.L[child_pos] = self.L[child_pos], self.L[pos]
+            pos = child_pos
+            child_pos = 2*pos+1
+        return to_return
+
+
+def triTas(L):
+    tas = Heap()
+    tas.fromList(L)
+    Ltri = []
+    for k in range(tas.n):
+        Ltri.append(tas.pop())
+    return Ltri
+
+L = list(np.random.randint(0, 100, 12))
+print(triTas(L[:]))
+
+
+import heapq
+
+def triTasQ(L):
+    n = len(L)
+    Ltri = []
+    heapq.heapify(L)
+    for i in range(n):
+        Ltri.append(heapq.heappop(L))
+    return(Ltri)
+
+print(triTasQ(L[:]))
+
+
+
+import time
+import random
+import matplotlib.pyplot as plt
+
+def listeAlea(n):
+    l=[]
+    for i in range(n):
+        l.append(random.uniform(-1000,1000))
+    return l
+
+num = 15
+tailles = np.logspace(2, 5, 15, dtype='int')
+tps, tpsq = np.zeros(num), np.zeros(num)
+reps = 10
+for i in range(num):
+    for k in range(reps):
+        L = listeAlea(tailles[i])
+
+        t0 = time.time()
+        triTas(L[:])
+        tps[i] += time.time()-t0
+
+        t0 = time.time()
+        triTasQ(L[:])
+        tpsq[i] += time.time()-t0
+
+tps /= reps
+tpsq /= reps
+
+plt.plot(tailles, tps, label='Heap')
+plt.plot(tailles, tpsq, label='heapq')
+plt.xscale('log')
+plt.yscale('log')
+plt.xlabel('n')
+plt.ylabel('t')
+plt.title("Comparaison des temps d'execution du tri par tas")
+plt.legend()
+plt.show()
